@@ -4,5 +4,5 @@ import com.mrjoi.messagejob.model.Reserva;
 
 public interface Sendmail<T> {
 
-    Boolean Send(String to, Reserva data);
+    Boolean Send(String voucherTemplate, String to);
 }

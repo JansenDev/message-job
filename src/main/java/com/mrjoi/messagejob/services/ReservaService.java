@@ -7,5 +7,5 @@ import java.util.List;
 public interface ReservaService {
 
     public List<Reserva> listReservasPending();
-    public void setHasEmailTrue(Long reserva_id);
+    public void setHasEmailTrue(Long numBol);
 }
