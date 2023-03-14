@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface BoletaEntradaRepository extends CrudRepository<BoletaEntrada, Integer> {
 
-    @Query("SELECT u FROM BoletaEntrada u WHERE u.hasEmail = false")
+    @Query("SELECT u FROM BoletaEntrada u WHERE u.hasEmail = false or u.hasEmail = null")
     List<BoletaEntrada> listticketsPending();
 
     @Modifying
