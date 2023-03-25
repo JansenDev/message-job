@@ -22,11 +22,11 @@ public class VoucherTemplate {
                             <h2 style="text-align: center;">Boleta de venta electronica</h2>
                         </div>
                         <div  style="text-align: center;">
-                            <img style="height: 78px; width: 176px;"src="https://iili.io/HMLqXJS.png" />
+                            <img style="height: 78px; width: 176px;" src="https://iili.io/HMLqXJS.png" />
                             <p style="margin-top: 15px;">Ate 15494</p>
                             <p style="margin-top: -10px;">Local Puruchuco</p>
                         </div>
-                        <hr style="min-width: 600px;height: 1px; margin: 1rem 0;color: inherit;background-color: currentColor;border: 0;">
+                        <hr style="min-width: 600px;height: 1px; margin: 1rem 0;color: inherit;background-color: currentColor;border: 0;" />
                         <div  style="padding-bottom: 1em; display: flex;">
                             <div style="padding-right: 80px;">
                                 <h5 style="font-weight: 900;font-size: 0.8em;">Cliente</h5>
@@ -97,7 +97,7 @@ public class VoucherTemplate {
                                     <h4>Condiciones y formas de pago</h4>
                                 </div>
                                 <div>
-                                    <img style="height: 40px;width: 40px;"src="https://www.mrjoy.com.ec/wp-content/uploads/2022/03/favicon1.png"/>
+                                    <img style="height: 40px;width: 40px;" src="https://www.mrjoy.com.ec/wp-content/uploads/2022/03/favicon1.png"/>
                                 </div>
                             </div>
 
@@ -110,6 +110,7 @@ public class VoucherTemplate {
                             Código SWIFT: BPDODOSXXXX
                             </p>
                         </div>
+                    </div>
                 </body>""";
 
         double acompaniante_price_unit= 6.0;
@@ -120,6 +121,7 @@ public class VoucherTemplate {
         double IGV_total = reserva.getTotalPago() * 0.18;
         double IGV_total_round = Math.round(IGV_total * 100.0) / 100.0;
         double valor_venta = reserva.getTotalPago() - IGV_total;
+        double valor_venta_round = Math.round(valor_venta * 100.0) / 100.0;
 
         Map<String, Object> params = new HashMap<>();
         params.put("nombres", reserva.getNombres());
@@ -141,7 +143,7 @@ public class VoucherTemplate {
 
         params.put("IGV_perc", IGV_perc);
         params.put("IGV_total", IGV_total_round);
-        params.put("valor_venta", valor_venta);
+        params.put("valor_venta", valor_venta_round);
 
         params.put("tota_pago", reserva.getTotalPago());
 
