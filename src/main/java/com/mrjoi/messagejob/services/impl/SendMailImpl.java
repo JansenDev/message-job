@@ -1,14 +1,23 @@
 package com.mrjoi.messagejob.services.impl;
 
+import com.lowagie.text.DocumentException;
 import com.mrjoi.messagejob.model.Reserva;
 import com.mrjoi.messagejob.services.Sendmail;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Properties;
 
 @Service
@@ -47,17 +56,33 @@ public class SendMailImpl implements Sendmail {
             BodyPart messageBodyPart1 = new MimeBodyPart();
             messageBodyPart1.setText("Gracias por vivir la esperiencia Mr Joy con nosotros.");
             messageBodyPart1.setContent(voucherTemplate, "text/html");
-//            MimeBodyPart messageBodyPart2 = new MimeBodyPart();
+
+
+            // Crear un objeto ITextRenderer
+            ITextRenderer renderer = new ITextRenderer();
+            // Asignar el contenido HTML al ITextRenderer
+            renderer.setDocumentFromString("<html><body>"+voucherTemplate+"</body></html>");
+            // Renderizar el contenido y guardar el resultado en un objeto ByteArrayOutputStream
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            renderer.layout();
+            renderer.createPDF(outputStream);
+            // Crear un objeto DataSource a partir del objeto ByteArrayOutputStream
+            DataSource dataSource = new ByteArrayDataSource(outputStream.toByteArray(), "application/pdf");
+            // Crear un objeto DataHandler a partir del objeto DataSource
+//            DataHandler dataHandler = new DataHandler(dataSource);
+
+
+            MimeBodyPart messageBodyPart2 = new MimeBodyPart();
 //            String filename = "F:\\JanPc\\Desktop\\GFGsheet.xlsx";//change accordingly
 //            DataSource source = new FileDataSource(filename);
-//            messageBodyPart2.setDataHandler(new DataHandler(source));
-//            messageBodyPart2.setFileName("filename");
+            messageBodyPart2.setDataHandler(new DataHandler(dataSource));
+            messageBodyPart2.setFileName("contrato.pdf");
 
 //            message.setReplyTo(InternetAddress.parse("seguragjj25.2@gmail.com"));
 
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart1);
-//            multipart.addBodyPart(messageBodyPart2);
+            multipart.addBodyPart(messageBodyPart2);
             message.setContent(multipart);
 
             Transport.send(message);
@@ -69,6 +94,8 @@ public class SendMailImpl implements Sendmail {
             System.out.println("Error");
 
             return false;
+        } catch (DocumentException e) {
+            throw new RuntimeException(e);
         }
 
     }
