@@ -33,8 +33,9 @@ public class MessageJobImpl implements MessageJob {
         VoucherTemplate vt = new VoucherTemplate();
         for (Reserva reserva : users) {
             String voucherReservaTemplate = vt.getVoucherReservaTemplate(reserva);
+            String contratoReservaTemplate = vt.getContratoReserva();
             String emailClient = reserva.getEmail();
-            boolean isSent = sendMail.Send(voucherReservaTemplate, emailClient);
+            boolean isSent = sendMail.Send(voucherReservaTemplate, emailClient, contratoReservaTemplate);
             if (isSent) {
                 reservaService.setHasEmailTrue(reserva.getIdReserva());
             }
@@ -51,7 +52,7 @@ public class MessageJobImpl implements MessageJob {
             Long idLogin = (long) ticket.getIdLogin();
             Cliente clientFound = clienteService.findClienteByIdLogin(idLogin);
             String clientEmail = clientFound.getCorreo();
-            boolean isSent = sendMail.Send(voucherEntradaTemplate, clientEmail);
+            boolean isSent = sendMail.SendEntradaVoucher(voucherEntradaTemplate, clientEmail);
             if (isSent) {
                 Integer numBoleta = ticket.getNumBoleta();
                 boletaEntradaService.setHasEmailTrue(numBoleta);

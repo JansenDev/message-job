@@ -113,8 +113,8 @@ public class VoucherTemplate {
                     </div>
                 </body>""";
 
-        double acompaniante_price_unit= 6.0;
-        double acompaniante_price_total= reserva.getAcompaniante() * acompaniante_price_unit ;
+        double acompaniante_price_unit = 6.0;
+        double acompaniante_price_total = reserva.getAcompaniante() * acompaniante_price_unit;
         double personas_price_total = reserva.getTotalPago() - acompaniante_price_total;
         double personas_price_unit = personas_price_total / reserva.getCantPersonas();
         double IGV_perc = 0.18;
@@ -152,32 +152,33 @@ public class VoucherTemplate {
 
     public String getVoucherEntradaTemplate(BoletaEntrada ticket) {
         return """
-                <body>
+                 <body>
                     <div style="width:600px; margin: auto; font-family:Arial, Helvetica, sans-serif">
                         <div >
                             <h2 style="text-align: center;">Boleta de venta electronica</h2>
                         </div>
                         <div  style="text-align: center;">
-                            <img style="height: 78px; width: 176px;"src="https://iili.io/HMLqXJS.png" />
+                            <img style="height: 78px; width: 176px;" src="https://iili.io/HMLqXJS.png" />
                             <p style="margin-top: 15px;">Ate 15494</p>
                             <p style="margin-top: -10px;">Local Puruchuco</p>
                         </div>
-                        <hr style="min-width: 600px;height: 1px; margin: 1rem 0;color: inherit;background-color: currentColor;border: 0;">
+                        <hr style="min-width: 600px;height: 1px; margin: 1rem 0;color: inherit;background-color: currentColor;border: 0;" />
                         <div  style="padding-bottom: 1em; display: flex;">
                             <div style="padding-right: 80px;">
                                 <h5 style="font-weight: 900;font-size: 0.8em;">Cliente</h5>
-                                <p style="font-size: 15px;">${nombres}</p>
-                                <p style="font-size: 15px;">Fecha Reserva: ${fecha_reserva} ${hora_reserva} am</p>
+                                <p style="font-size: 15px;">${nombres} ${apellidos}</p>
+                                <h5 style="font-weight: 900;font-size: 0.8em;">Fecha Reserva:</h5>
+                                <p style="font-size: 15px;">${fecha_reserva} ${hora_reserva} am</p>
                             </div>
                             <div style="padding-right: 40px;">
-                                <h5 style="font-weight: 900;font-size: 0.8em;">N° de boleta:</h5>
-                                <h5 style="font-weight: 900;font-size: 0.8em;">Fecha registro:</h5>
-                                <h5 style="font-weight: 900;font-size: 0.8em;">Fecha vencimiento:</h5>
+                                <h5 style="font-weight: 900;;font-size: 0.8em;">N° de boleta:</h5>
+                                <h5 style="font-weight: 900;;font-size: 0.8em;">Fecha registro:</h5>
+                                <h5 style="font-weight: 900;;font-size: 0.8em;">Fecha vencimiento:</h5>
                             </div>
                             <div>
-                                <h5 style="font-weight: 900;;font-size: 0.8em;">103</h5>
+                                <h5 style="font-weight: 900;;font-size: 0.8em;">${num_boleta}</h5>
                                 <p>${fecha_registro}</p>
-                                <p>26/02/2023</p>
+                                <p>${fecha_reserva}</p>
                             </div>
                         </div>
                         <div style="padding-bottom: 40px;display: grid;grid-template-rows: minmax(220px,auto);">
@@ -192,10 +193,16 @@ public class VoucherTemplate {
                                 </thead>
                                 <tbody>
                                 <tr style="height:40px;">
-                                    <td style="text-align: center">1</td>
+                                    <td style="text-align: center">${cantidad_personas}</td>
                                     <td style="text-align: center">Reserva de cumpleaños</td>
-                                    <td style="text-align: right">0.00</td>
-                                    <td style="text-align: right">0.00</td>
+                                    <td style="text-align: right">${personas_price_unit}</td>
+                                    <td style="text-align: right">${personas_price_total}</td>
+                                </tr>
+                                <tr style="height:40px;">
+                                    <td style="text-align: center">${cantidad_acompaniante}</td>
+                                    <td style="text-align: center">Reserva de cumpleaños</td>
+                                    <td style="text-align: right">${acompaniante_price_unit}</td>
+                                    <td style="text-align: right">${acompaniante_price_total}</td>
                                 </tr>
                                 </tbody>
                                 <tfoot>
@@ -203,19 +210,19 @@ public class VoucherTemplate {
                                         <th></th>
                                         <th></th>
                                         <th style="text-align: right">V. venta</th>
-                                        <th style="text-align: right">0.00</th>
+                                        <th style="text-align: right">${valor_venta}</th>
                                     </tr>
                                     <tr style="height:30px;">
                                         <th></th>
                                         <th></th>
                                         <th style="text-align: right">IGV 18%</th>
-                                        <th style="text-align: right">0.00</th>
+                                        <th style="text-align: right">${IGV_total}</th>
                                     </tr>
                                     <tr style="height:30px;">
                                         <th></th>
                                         <th></th>
                                         <th style="text-align: right">Total </th>
-                                        <th style="text-align: right">0.00</th>
+                                        <th style="text-align: right">${tota_pago}</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -226,7 +233,7 @@ public class VoucherTemplate {
                                     <h4>Condiciones y formas de pago</h4>
                                 </div>
                                 <div>
-                                    <img style="height: 40px;width: 40px;"src="https://www.mrjoy.com.ec/wp-content/uploads/2022/03/favicon1.png"/>
+                                    <img style="height: 40px;width: 40px;" src="https://www.mrjoy.com.ec/wp-content/uploads/2022/03/favicon1.png"/>
                                 </div>
                             </div>
 
@@ -239,7 +246,226 @@ public class VoucherTemplate {
                             Código SWIFT: BPDODOSXXXX
                             </p>
                         </div>
+                    </div>
                 </body>""";
     }
 
+    public String getContratoReserva() {
+        return """
+                  <html>
+                        <head>
+                      <style>
+                          body {
+                              background-color: #f7f7f7;
+                              font-family: 'Roboto', sans-serif;
+                              font-size: 16px;
+                              color: #333;
+                              margin: 0;
+                          }
+                  
+                          header {
+                              background-image: url(https://mrjoy.com.pe/wp-content/uploads/2019/09/headers-cumple.png);
+                              padding: 40px 0;
+                          }
+                  
+                          .header-left {
+                              float: left;
+                          }
+                  
+                          .header-left img {
+                              height: 60px;
+                          }
+                  
+                          .header-right {
+                              float: right;
+                              text-align: right;
+                          }
+                  
+                          .header-right h1 {
+                              font-size: 36px;
+                              margin: 0;
+                          }
+                  
+                          .header-right p {
+                              margin: 5px 0;
+                          }
+                  
+                          .container {
+                              width: 80%;
+                              margin: 0 auto;
+                  
+                          }
+                  
+                          .container h2,
+                          h1 {
+                              color: rgb(40, 56, 144);
+                          }
+                  
+                          main {
+                              padding: 40px 0;
+                          }
+                  
+                          .details {
+                              margin: 0 auto;
+                              max-width: 600px;
+                              margin-bottom: 20px;
+                  
+                          }
+                  
+                          .details h2 {
+                              margin: 0;
+                              font-size: 24px;
+                          }
+                  
+                          table {
+                              border-collapse: collapse;
+                              width: 100%;
+                          }
+                  
+                          table th,
+                          table td {
+                              padding: 10px;
+                              text-align: left;
+                              border: 1px solid #ccc;
+                          }
+                  
+                          table th {
+                              background: #1774b9;
+                              color: #fff;
+                          }
+                  
+                          table tfoot td {
+                              text-align: right;
+                          }
+                  
+                          table tfoot tr:first-child td {
+                              border-top: 2px solid #ccc;
+                          }
+                  
+                          table tfoot tr:last-child td {
+                              border-bottom: 2px solid #ccc;
+                          }
+                  
+                          footer {
+                              background-color: #283890;
+                              color: #fff;
+                              padding: 20px 0;
+                              text-align: center;
+                          }
+                  
+                          footer p {
+                              margin: 0;
+                          }
+                  
+                          @media screen and (max-width: 768px) {
+                              .header-left img {
+                                  height: 40px;
+                              }
+                  
+                              .header-right h1 {
+                                  font-size: 28px;
+                              }
+                          }
+                  
+                          .header-right p {
+                              font-size: 14px;
+                          }
+                  
+                          p {
+                              text-indent: 2em;
+                          }
+                      </style>
+                  </head>
+                  
+                  <body>
+                      <header>
+                          <div class="container">
+                              <div class="header-left" style="padding-top:50px">
+                                  <img src="https://mrjoy.com.pe/wp-content/uploads/2019/09/headers-cumple.png" alt="Logo" />
+                              </div>
+                              <div class="header-right" style="padding-top:50px">
+                  
+                                  <p>123 Calle Principal</p>
+                                  <p>Lima, Peru </p>
+                                  <p>Teléfono: 01-456-7890</p>
+                              </div>
+                          </div>
+                      </header>
+                      <main>
+                          <div class="container" style="padding-top:40px">
+                              <div class="details">
+                                  <h2>Detalles de la Reserva</h2>
+                                  <p>Fecha Reserva:</p>
+                                  <p>Hora :</p>
+                                  <p>Cliente :</p>
+                                  <p>Cantidad Invitados :</p>
+                                  <p>n° de acompañantes :</p>
+                                  <p>Paquete Contratado :</p>
+                              </div>
+                  
+                          </div>
+                      </main>
+                      <div class="container" style="">
+                          <h1 style="text-align: center;">Contrato de Reserva para Cumpleaños</h1>
+                  
+                          <p>Este contrato (en adelante, el "Contrato") se realiza y se firma entre [Nombre del Cliente] (en adelante, el
+                              "Cliente") y [Nombre del Proveedor] (en adelante, el "Proveedor") para reservar [Cantidad de Personas]
+                              personas para una celebración de cumpleaños en la fecha especificada por el Cliente.</p>
+                  
+                          <h2>1. Términos y Condiciones</h2>
+                          <p>1.1 La reserva se realizará para la fecha [Fecha del Cumpleaños] y se llevará a cabo en el lugar indicado por
+                              el Proveedor.</p>
+                  
+                          <p>1.2 La reserva incluirá espacio suficiente para alojar a [Cantidad de Personas] personas.</p>
+                  
+                          <p>1.3 El Cliente será responsable de proporcionar la lista de invitados al Proveedor antes de la fecha del
+                              evento.</p>
+                  
+                          <p>1.4 El Cliente se compromete a cumplir con las políticas y reglas del Proveedor en todo momento durante el
+                              evento.</p>
+                  
+                          <p>1.5 El Proveedor se reserva el derecho de cancelar la reserva en cualquier momento y por cualquier motivo,
+                              incluyendo pero no limitado a la violación de las políticas del proveedor, falta de pago, o cualquier otra
+                              razón justificada.</p>
+                  
+                          <h2>2. Responsabilidades de las partes</h2>
+                          <p>2.1 El Proveedor será responsable de proporcionar el espacio para la celebración del cumpleaños y de
+                              garantizar que se cumplan todas las normas y regulaciones aplicables.</p>
+                  
+                          <p>2.2 El Proveedor no será responsable de ninguna lesión, daño o pérdida de propiedad durante el evento.</p>
+                  
+                          <p>2.3 El Cliente será responsable de cualquier daño a la propiedad del Proveedor causado por el Cliente o sus
+                              invitados durante el evento.</p>
+                  
+                          <h2>3 .Términos de Pago</h2>
+                          <p>3.1 El Cliente deberá pagar el [Monto Total de la Reserva] como depósito para la reserva del evento.</p>
+                  
+                          <p>3.2 El saldo restante de la reserva deberá ser pagado en su totalidad antes de la fecha del evento.</p>
+                  
+                          <p>3.3 Si el Cliente no paga el saldo restante de la reserva antes de la fecha del evento, el Proveedor se
+                              reserva el derecho de cancelar la reserva.</p>
+                  
+                          <h2>4. Política de Cancelación y Reembolso</h2>
+                          <p>4.1 Si el Cliente cancela la reserva antes de [Cantidad de Días Antes del Evento] días de la fecha del
+                              evento, el Proveedor reembolsará el depósito completo.</p>
+                  
+                          <p>4.2 Si el Cliente cancela la reserva dentro de [Cantidad de Días Antes del Evento] días de la fecha del
+                              evento, el Proveedor no reembolsará el depósito.</p>
+                  
+                          <p>4.3 Si el Cliente no se presenta en la fecha del evento, el Proveedor no reembolsará el depósito.</p>
+                          <h2>5. Otros Datos Relevantes</h2>
+                          <p>5.1 Cualquier cambio en la fecha del evento debe ser notificado al Proveedor con al menos [Cantidad de Días
+                              de Anticipación] días de anticipación.</p>
+                          <p>5.2 El Cliente es responsable de proporcionar cualquier equipo, decoración, alimentos y bebidas necesarios
+                              para el evento, a menos que se acuerde lo contrario en este Contrato.</p>
+                          <p>5.3 Este Contrato se rige por las leyes del país o estado donde se lleva a cabo el evento.</p>
+                  
+                          <p>Firma del Cliente: ________</p>
+                  
+                          <p>Firma del Proveedor: ________</p>
+                  
+                          <p>Fecha: ________</p>
+                      </div>
+                  </body></html>""";
+    }
 }

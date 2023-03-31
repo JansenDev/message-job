@@ -22,7 +22,7 @@ import java.util.Properties;
 
 @Service
 public class SendMailImpl implements Sendmail {
-    public Boolean Send(String voucherTemplate, String to) {
+    public Boolean Send(String voucherTemplate, String to, String contratoTempalte) {
 
         // Sender's email ID needs to be mentioned
         String from = "seguragjj250697@gmail.com";
@@ -42,7 +42,7 @@ public class SendMailImpl implements Sendmail {
         Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("mr.joy.lima@gmail.com", "aovoxarnmwjdqurx");
+                return new PasswordAuthentication("seguragjj25.2@gmail.com", "stqbbyxfhfmqtiqj");
             }
         });
         session.setDebug(true);
@@ -61,7 +61,7 @@ public class SendMailImpl implements Sendmail {
             // Crear un objeto ITextRenderer
             ITextRenderer renderer = new ITextRenderer();
             // Asignar el contenido HTML al ITextRenderer
-            renderer.setDocumentFromString("<html><body>"+voucherTemplate+"</body></html>");
+            renderer.setDocumentFromString(contratoTempalte);
             // Renderizar el contenido y guardar el resultado en un objeto ByteArrayOutputStream
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             renderer.layout();
@@ -96,6 +96,58 @@ public class SendMailImpl implements Sendmail {
             return false;
         } catch (DocumentException e) {
             throw new RuntimeException(e);
+        }
+
+    }
+
+    public Boolean SendEntradaVoucher(String voucherTemplate, String to ) {
+
+        // Sender's email ID needs to be mentioned
+        String from = "seguragjj250697@gmail.com";
+
+        // Assuming you are sending email from through gmails smtp
+        String host = "smtp.gmail.com";
+
+        // Get system properties
+        Properties properties = System.getProperties();
+        properties.put("mail.smtp.host", host);
+        properties.put("mail.smtp.port", "465");
+        properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtp.auth", "true");
+
+        // Setup mail server
+        // Get the Session object.// and pass username and password
+        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("seguragjj25.2@gmail.com", "stqbbyxfhfmqtiqj");
+            }
+        });
+        session.setDebug(true);
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(from));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            message.setSubject("Boleta de compra mr Joy");
+
+            BodyPart messageBodyPart1 = new MimeBodyPart();
+            messageBodyPart1.setText("Gracias por vivir la esperiencia Mr Joy con nosotros.");
+            messageBodyPart1.setContent(voucherTemplate, "text/html");
+
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPart1);
+            message.setContent(multipart);
+
+            Transport.send(message);
+            System.out.println("Sent voucher successfully to " + to + "....");
+            return true;
+        } catch (MessagingException mex) {
+            mex.printStackTrace();
+            System.out.println(mex.getMessage());
+            System.out.println("Error");
+
+            return false;
         }
 
     }
