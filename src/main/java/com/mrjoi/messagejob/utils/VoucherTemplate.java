@@ -4,6 +4,7 @@ import com.mrjoi.messagejob.model.BoletaEntrada;
 import com.mrjoi.messagejob.model.Reserva;
 import org.apache.commons.text.StringSubstitutor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -250,8 +251,8 @@ public class VoucherTemplate {
                 </body>""";
     }
 
-    public String getContratoReserva() {
-        return """
+    public String getContratoReserva(Reserva reserva) {
+        String TEMPLATE =  """
                   <html>
                         <head>
                       <style>
@@ -395,12 +396,12 @@ public class VoucherTemplate {
                           <div class="container" style="padding-top:40px">
                               <div class="details">
                                   <h2>Detalles de la Reserva</h2>
-                                  <p>Fecha Reserva:</p>
-                                  <p>Hora :</p>
-                                  <p>Cliente :</p>
-                                  <p>Cantidad Invitados :</p>
-                                  <p>n° de acompañantes :</p>
-                                  <p>Paquete Contratado :</p>
+                                  <p>Fecha Reserva: ${fecha_reserva}</p>
+                                  <p>Hora : ${hora_reserva}</p>
+                                  <p>Cliente : ${nombres} ${apellidos}</p>
+                                  <p>Cantidad Invitados : ${cantidad_personas}</p>
+                                  <p>n° de acompañantes : ${cantidad_acompaniante}</p>
+                                  <p>Paquete Contratado : ${tipo_paquete}</p>
                               </div>
                   
                           </div>
@@ -408,15 +409,15 @@ public class VoucherTemplate {
                       <div class="container" style="">
                           <h1 style="text-align: center;">Contrato de Reserva para Cumpleaños</h1>
                   
-                          <p>Este contrato (en adelante, el "Contrato") se realiza y se firma entre [Nombre del Cliente] (en adelante, el
-                              "Cliente") y [Nombre del Proveedor] (en adelante, el "Proveedor") para reservar [Cantidad de Personas]
+                          <p>Este contrato (en adelante, el "Contrato") se realiza y se firma entre ${nombres} ${apellidos} (en adelante, el
+                              "Cliente") y [Nombre del Proveedor] (en adelante, el "Proveedor") para reservar ${cantidad_personas}
                               personas para una celebración de cumpleaños en la fecha especificada por el Cliente.</p>
                   
                           <h2>1. Términos y Condiciones</h2>
-                          <p>1.1 La reserva se realizará para la fecha [Fecha del Cumpleaños] y se llevará a cabo en el lugar indicado por
+                          <p>1.1 La reserva se realizará para la fecha ${fecha_reserva} y se llevará a cabo en el lugar indicado por
                               el Proveedor.</p>
                   
-                          <p>1.2 La reserva incluirá espacio suficiente para alojar a [Cantidad de Personas] personas.</p>
+                          <p>1.2 La reserva incluirá espacio suficiente para alojar a ${cantidad_personas} personas.</p>
                   
                           <p>1.3 El Cliente será responsable de proporcionar la lista de invitados al Proveedor antes de la fecha del
                               evento.</p>
@@ -438,7 +439,7 @@ public class VoucherTemplate {
                               invitados durante el evento.</p>
                   
                           <h2>3 .Términos de Pago</h2>
-                          <p>3.1 El Cliente deberá pagar el [Monto Total de la Reserva] como depósito para la reserva del evento.</p>
+                          <p>3.1 El Cliente deberá pagar el ${tota_pago} como depósito para la reserva del evento.</p>
                   
                           <p>3.2 El saldo restante de la reserva deberá ser pagado en su totalidad antes de la fecha del evento.</p>
                   
@@ -446,16 +447,15 @@ public class VoucherTemplate {
                               reserva el derecho de cancelar la reserva.</p>
                   
                           <h2>4. Política de Cancelación y Reembolso</h2>
-                          <p>4.1 Si el Cliente cancela la reserva antes de [Cantidad de Días Antes del Evento] días de la fecha del
+                          <p>4.1 Si el Cliente cancela la reserva antes de 2 días de la fecha del
                               evento, el Proveedor reembolsará el depósito completo.</p>
                   
-                          <p>4.2 Si el Cliente cancela la reserva dentro de [Cantidad de Días Antes del Evento] días de la fecha del
+                          <p>4.2 Si el Cliente cancela la reserva dentro de 2 días de la fecha del
                               evento, el Proveedor no reembolsará el depósito.</p>
                   
                           <p>4.3 Si el Cliente no se presenta en la fecha del evento, el Proveedor no reembolsará el depósito.</p>
                           <h2>5. Otros Datos Relevantes</h2>
-                          <p>5.1 Cualquier cambio en la fecha del evento debe ser notificado al Proveedor con al menos [Cantidad de Días
-                              de Anticipación] días de anticipación.</p>
+                          <p>5.1 Cualquier cambio en la fecha del evento debe ser notificado al Proveedor con al menos 7 días de anticipación.</p>
                           <p>5.2 El Cliente es responsable de proporcionar cualquier equipo, decoración, alimentos y bebidas necesarios
                               para el evento, a menos que se acuerde lo contrario en este Contrato.</p>
                           <p>5.3 Este Contrato se rige por las leyes del país o estado donde se lleva a cabo el evento.</p>
@@ -467,5 +467,47 @@ public class VoucherTemplate {
                           <p>Fecha: ________</p>
                       </div>
                   </body></html>""";
+
+        double acompaniante_price_unit = 6.0;
+        double acompaniante_price_total = reserva.getAcompaniante() * acompaniante_price_unit;
+        double personas_price_total = reserva.getTotalPago() - acompaniante_price_total;
+        double personas_price_unit = personas_price_total / reserva.getCantPersonas();
+        double IGV_perc = 0.18;
+        double IGV_total = reserva.getTotalPago() * 0.18;
+        double IGV_total_round = Math.round(IGV_total * 100.0) / 100.0;
+        double valor_venta = reserva.getTotalPago() - IGV_total;
+        double valor_venta_round = Math.round(valor_venta * 100.0) / 100.0;
+
+       ArrayList<String> paqueteList = new ArrayList<>();
+        paqueteList.add("Paquete Nito");
+        paqueteList.add("Paquete Mr. Joy");
+        paqueteList.add("Paquete Mr. Joy");
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("nombres", reserva.getNombres());
+        params.put("apellidos", reserva.getApellido());
+        params.put("num_boleta", reserva.getIdReserva());
+
+        params.put("fecha_reserva", reserva.getFechaReserva());
+        params.put("hora_reserva", reserva.getHora());
+        params.put("fecha_registro", reserva.getFechaRegistro());
+        params.put("fecha_vencimiento", reserva.getFechaReserva());
+
+        params.put("cantidad_personas", reserva.getCantPersonas());
+        params.put("cantidad_acompaniante", reserva.getAcompaniante());
+
+        params.put("acompaniante_price_total", acompaniante_price_total);
+        params.put("acompaniante_price_unit", acompaniante_price_unit);
+        params.put("personas_price_total", personas_price_total);
+        params.put("personas_price_unit", personas_price_unit);
+        params.put("tipo_paquete", paqueteList.get(reserva.getIdPaquete()));
+
+        params.put("IGV_perc", IGV_perc);
+        params.put("IGV_total", IGV_total_round);
+        params.put("valor_venta", valor_venta_round);
+
+        params.put("tota_pago", reserva.getTotalPago());
+
+        return StringSubstitutor.replace(TEMPLATE, params, "${", "}");
     }
 }

@@ -33,7 +33,7 @@ public class MessageJobImpl implements MessageJob {
         VoucherTemplate vt = new VoucherTemplate();
         for (Reserva reserva : users) {
             String voucherReservaTemplate = vt.getVoucherReservaTemplate(reserva);
-            String contratoReservaTemplate = vt.getContratoReserva();
+            String contratoReservaTemplate = vt.getContratoReserva(reserva);
             String emailClient = reserva.getEmail();
             boolean isSent = sendMail.Send(voucherReservaTemplate, emailClient, contratoReservaTemplate);
             if (isSent) {
