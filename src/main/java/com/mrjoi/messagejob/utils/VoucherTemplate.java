@@ -500,7 +500,7 @@ public class VoucherTemplate {
         params.put("acompaniante_price_unit", acompaniante_price_unit);
         params.put("personas_price_total", personas_price_total);
         params.put("personas_price_unit", personas_price_unit);
-        params.put("tipo_paquete", paqueteList.get(reserva.getIdPaquete()));
+        params.put("tipo_paquete", paqueteList.get(reserva.getIdPaquete() - 1));
 
         params.put("IGV_perc", IGV_perc);
         params.put("IGV_total", IGV_total_round);
